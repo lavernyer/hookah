@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Service;
+namespace App\Application\Service\Company;
 
-use App\Domain\Api\Client;
+use App\Domain\Api\WingleGroup\ApiClient;
 use App\Domain\Model\Company\AskedCompany;
 use App\Domain\Model\Company\Jurisdiction;
 
 final class AskCompaniesService
 {
-    private Client $client;
+    private ApiClient $client;
 
-    public function __construct(Client $client, $state)
+    public function __construct(ApiClient $client)
     {
         $this->client = $client;
     }
@@ -22,11 +22,9 @@ final class AskCompaniesService
         $companies = $this->client->companies($query->toArray());
 
         foreach ($companies as $company) {
-            $jurisdiction = $company['region']['id'];
-
             new AskedCompany(
                 $company['id'],
-                Jurisdiction::fromString($company['region']['id']),
+                Jurisdiction::fromName($company['region']['name']),
                 $company['name'],
             );
         }

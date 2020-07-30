@@ -6,5 +6,5 @@ namespace App\Domain\Matcher;
 
 interface Matcher
 {
-
+    public function match(string $askedName, string $name): bool;
 }

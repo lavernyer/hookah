@@ -6,8 +6,13 @@ namespace App\Domain\Matcher;
 
 final class RegexMatcher implements Matcher
 {
-    public function match(string $name): bool
+    private const PATTERN = '/(, ?)?(LLC|Inc|Co|Corp)\.?$/i';
+
+    public function match(string $askedName, string $name): bool
     {
-        $res = preg_replace('/(, ?)?(LLC|Inc|Co|Corp)\.?$/i', '', $name);
+        $cleanAskedName = trim(preg_replace(self::PATTERN, '', $askedName));
+        $cleanName = trim(preg_replace(self::PATTERN, '', $name));
+
+        return $cleanAskedName === $cleanName;
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Api\OpenCorporates;
+namespace App\Infrastructure\Api\WingleGroup;
 
 use App\Domain\Api\Response;
 use App\Domain\Api\WingleGroup\ApiClient;

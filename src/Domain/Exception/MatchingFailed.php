@@ -6,7 +6,7 @@ namespace App\Domain\Exception;
 
 use RuntimeException;
 
-final class MatcherException extends RuntimeException
+final class MatchingFailed extends RuntimeException
 {
     public static function byName(string $askedName): self
     {

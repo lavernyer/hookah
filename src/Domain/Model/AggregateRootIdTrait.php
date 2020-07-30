@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Model;
 
 use Assert\Assertion;
-use EventSauce\EventSourcing\AggregateRootId;
 use Ramsey\Uuid\Uuid;
 
 trait AggregateRootIdTrait
@@ -17,12 +16,9 @@ trait AggregateRootIdTrait
         return new self(Uuid::uuid4()->toString());
     }
 
-    public static function fromString(string $id): AggregateRootId
+    public static function fromString(string $id): self
     {
-        /** @var AggregateRootId $aggregateRootId */
-        $aggregateRootId = new self($id);
-
-        return $aggregateRootId;
+        return new self($id);
     }
 
     public function equals(self $entityId): bool

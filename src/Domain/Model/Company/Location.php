@@ -9,17 +9,17 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Embeddable()
  */
-final class Address
+final class Location
 {
+    /**
+     * @ORM\Column(type="jurisdiction")
+     */
+    public Jurisdiction $jurisdiction;
+
     /**
      * @ORM\Column(type="string")
      */
-    public string $full;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    public ?string $address;
+    public string $address;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -42,24 +42,19 @@ final class Address
     public ?string $country;
 
     public function __construct(
-        string $full,
-        ?string $address,
+        Jurisdiction $jurisdiction,
+        string $address,
         ?string $locality,
         ?string $region,
         ?string $postalCode,
         ?string $country
     )
     {
-        $this->full = $full;
+        $this->jurisdiction = $jurisdiction;
         $this->address = $address;
         $this->locality = $locality;
         $this->region = $region;
         $this->postalCode = $postalCode;
         $this->country = $country;
-    }
-
-    public function toString(): string
-    {
-        return $this->full;
     }
 }

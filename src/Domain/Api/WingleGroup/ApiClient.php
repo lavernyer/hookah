@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Api;
+namespace App\Domain\Api\WingleGroup;
 
-interface Client
+use App\Domain\Api\Response;
+
+interface ApiClient
 {
     public function authorize(): Response;
 

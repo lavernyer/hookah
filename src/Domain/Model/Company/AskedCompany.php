@@ -4,41 +4,48 @@ declare(strict_types=1);
 
 namespace App\Domain\Model\Company;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
  */
-class ReceivedCompany
+class AskedCompany
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Column(type="car_id", unique=true)
+     * @ORM\Column(type="company_id", unique=true)
      */
-    public CompanyId $id;
+    private CompanyId $id;
 
     /**
      * @ORM\Column(type="integer")
      */
-    public int $externalId;
+    private int $externalId;
+
+    /**
+     * @ORM\Column(type="jurisdiction")
+     */
+    private Jurisdiction $jurisdiction;
 
     /**
      * @ORM\Column(type="string")
      */
-    public string $state;
+    private string $name;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="datetime")
      */
-    public string $name;
+    private DateTimeImmutable $createdAt;
 
-    public function __construct(int $externalId, string $state, string $name)
+    public function __construct(int $externalId, Jurisdiction $state, string $name)
     {
         $this->id = CompanyId::create();
         $this->externalId = $externalId;
-        $this->state = $state;
+        $this->jurisdiction = $state;
         $this->name = $name;
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): CompanyId
@@ -51,9 +58,9 @@ class ReceivedCompany
         return $this->externalId;
     }
 
-    public function getState(): string
+    public function getJurisdiction(): Jurisdiction
     {
-        return $this->state;
+        return $this->jurisdiction;
     }
 
     public function getName(): string

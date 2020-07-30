@@ -6,17 +6,17 @@ namespace App\Application\Service\Company;
 
 use App\Domain\Model\Company\CompanyId;
 
-final class GetAskedCompany
+final class GetCompany
 {
-    private string $askedCompanyId;
+    private string $companyId;
 
-    public function __construct(string $askedCompanyId)
+    public function __construct(string $companyId)
     {
-        $this->askedCompanyId = $askedCompanyId;
+        $this->companyId = $companyId;
     }
 
-    public function getAskedCompanyId(): CompanyId
+    public function getCompanyId(): CompanyId
     {
-        return CompanyId::fromString($this->askedCompanyId);
+        return CompanyId::fromString($this->companyId);
     }
 }

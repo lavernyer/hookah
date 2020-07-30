@@ -1,15 +1,12 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
 
 services:
-    # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $companyClassName: 'App\Domain\Model\Company\Company'
+            $askedCompanyClassName: 'App\Domain\Model\Company\AskedCompany'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -21,11 +18,54 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller/'
+    App\Bridge\Symfony\Controller\:
+        resource: '../src/Bridge/Symfony/Controller'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    wg.client:
+        class: GuzzleHttp\Client
+        arguments:
+            $config:
+                base_uri: '%env(resolve:WG_API_LOCATION)%'
+
+    #    op.client:
+    #        class: GuzzleHttp\Client
+    #        arguments:
+    #            $config:
+    #                base_uri: '%env(resolve:OP_API_LOCATION)%'
+
+    GuzzleHttp\ClientInterface:
+        alias: GuzzleHttp\Client
+
+    GuzzleHttp\Client:
+        autowire: true
+
+    App\Domain\Api\WingleGroup\Credentials:
+        autowire: true
+        arguments:
+            $username: '%env(resolve:WG_API_USERNAME)%'
+            $password: '%env(resolve:WG_API_PASSWORD)%'
+
+    #    App\Infrastructure\Api\OpenCorporates\ApiClientEndpoints:
+    #        arguments:
+    #            $client: '@op.client'
+
+    App\Infrastructure\Api\WingleGroup\ApiClientEndpoints:
+        arguments:
+            $client: '@wg.client'
+
+    App\Domain\Matcher\ExactMatcher:
+        tags: ['app.domain.matcher']
+
+    App\Domain\Matcher\RegexMatcher:
+        tags: ['app.domain.matcher']
+
+    App\Domain\Matcher\MatcherCollector:
+        arguments:
+            - !tagged app.domain.matcher
+
+    App\Domain\Matcher\Matcher:
+        alias: App\Domain\Matcher\MatcherCollector
+
+    App\Domain\DataProcessor\DataExtractor:
+        alias: App\Domain\DataProcessor\ResponseExtractor

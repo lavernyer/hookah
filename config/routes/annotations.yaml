@@ -1,0 +1,10 @@
+rest_service:
+    resource: ../../src/Bridge/Symfony/Controller/Rest
+    type: annotation
+    prefix: /rest
+    defaults: { _format: json }
+
+kernel:
+    resource: ../../src/Kernel.php
+    type: annotation
+

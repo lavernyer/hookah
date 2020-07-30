@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Type;
 
-use App\Domain\Model\Company\OfficerId;
+use App\Domain\Model\Company\Jurisdiction;
 
-final class OfficerIdType extends UuidIdType
+final class JurisdictionType extends UuidIdType
 {
     public function getName(): string
     {
-        return 'officer_id';
+        return 'jurisdiction';
     }
 
     protected function getTypeClass(): string
     {
-        return OfficerId::class;
+        return Jurisdiction::class;
     }
 }

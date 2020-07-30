@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Company;
 
-use App\Application\Exception\AskedCompanyNotFound;
-use App\Domain\Model\Company\AskedCompany;
-use App\Domain\Model\Company\AskedCompanyRepository;
+use App\Application\Exception\CompanyNotFound;
+use App\Domain\Model\Company\Company;
+use App\Domain\Model\Company\CompanyRepository;
 
-final class GetAskedCompanyService
+final class GetCompanyService
 {
-    private AskedCompanyRepository $askedCompanies;
+    private CompanyRepository $askedCompanies;
 
-    public function __construct(AskedCompanyRepository $askedCompanies)
+    public function __construct(CompanyRepository $askedCompanies)
     {
         $this->askedCompanies = $askedCompanies;
     }
 
-    public function execute(GetAskedCompany $query): AskedCompany
+    public function execute(GetCompany $query): Company
     {
-        $askedCompany = $this->askedCompanies->byId($query->getAskedCompanyId());
+        $company = $this->askedCompanies->byId($query->getCompanyId());
 
-        if (null === $askedCompany) {
-            throw AskedCompanyNotFound::byId($query->getAskedCompanyId());
+        if (null === $company) {
+            throw CompanyNotFound::byId($query->getCompanyId());
         }
 
-        return $askedCompany;
+        return $company;
     }
 }

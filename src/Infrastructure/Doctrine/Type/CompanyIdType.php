@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Type;
 
-use App\Domain\Model\Car\CarId;
+use App\Domain\Model\Company\CompanyId;
 
-final class CarIdType extends UuidIdType
+final class CompanyIdType extends UuidIdType
 {
     public function getName(): string
     {
-        return 'car_id';
+        return 'company_id';
     }
 
     protected function getTypeClass(): string
     {
-        return CarId::class;
+        return CompanyId::class;
     }
 }
