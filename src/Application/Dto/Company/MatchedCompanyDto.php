@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Dto\Company;
 
-final class AgentDto
+final class MatchedCompanyDto
 {
-    public ?string $name = null, $address = null;
+    public string $id, $jurisdiction;
 }

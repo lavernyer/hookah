@@ -6,9 +6,6 @@ namespace App\Application\Dto\Company;
 
 final class LocationDto
 {
-    public string $address;
-    public ?string $locality;
-    public ?string $region;
-    public ?string $postalCode;
-    public ?string $country;
+    public string $jurisdiction, $address;
+    public ?string $locality = null, $region = null, $postalCode = null, $country = null;
 }

@@ -28,7 +28,7 @@ final class OrmAskedCompanyRepository implements AskedCompanyRepository
         return $askedCompany;
     }
 
-    public function byExternalId(string $id): ?AskedCompany
+    public function byExternalId(int $id): ?AskedCompany
     {
         /** @var AskedCompany $askedCompany */
         $askedCompany = $this->getRepository()->findOneBy(['externalId' => $id]);
@@ -36,7 +36,7 @@ final class OrmAskedCompanyRepository implements AskedCompanyRepository
         return $askedCompany;
     }
 
-    public function existsByExternalId(string $id): bool
+    public function existsByExternalId(int $id): bool
     {
         $criteria = ['externalId' => $id];
 

@@ -4,51 +4,44 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Company;
 
+use App\Application\Dto\Company\CompanyAssembler;
+use App\Application\Dto\Company\MatchedCompanyDto;
 use App\Domain\Api\OpenCorporates\ApiClient;
-use App\Domain\Api\OpenCorporates\InfoCriteria;
 use App\Domain\Api\OpenCorporates\SearchCriteria;
 use App\Domain\Matcher\MatchingProcessor;
-use App\Domain\Model\Company\CompanyFactory;
-use App\Domain\Model\Company\CompanyRepository;
+use App\Domain\Model\Company\AskedCompanyRepository;
 
-final class SearchCompanyService
+final class SearchCompanyService extends AskedCompanyService
 {
-    private GetAskedCompanyService $getAskedCompany;
-    private CompanyRepository $companies;
     private ApiClient $apiClient;
     private MatchingProcessor $matcher;
-    private CompanyFactory $factory;
+    private CompanyAssembler $assembler;
 
     public function __construct(
-        GetAskedCompanyService $getAskedCompany,
-        CompanyRepository $companies,
+        AskedCompanyRepository $companies,
         ApiClient $apiClient,
         MatchingProcessor $matcher,
-        CompanyFactory $factory
+        CompanyAssembler $assembler
     )
     {
-        $this->getAskedCompany = $getAskedCompany;
-        $this->companies = $companies;
+        parent::__construct($companies);
         $this->apiClient = $apiClient;
         $this->matcher = $matcher;
-        $this->factory = $factory;
+        $this->assembler = $assembler;
     }
 
-    public function execute(SearchCompany $command): void
+    public function execute(SearchCompany $command): MatchedCompanyDto
     {
         $getAskedCompany = new GetAskedCompany($command->getAskedCompanyId()->toString());
-        $askedCompany = $this->getAskedCompany->execute($getAskedCompany);
+        $askedCompany = $this->getAskedCompany($getAskedCompany);
 
         $query = new SearchCriteria($askedCompany->getJurisdiction(), $askedCompany->getName());
         $response = $this->apiClient->search($query);
 
-        $matchedCompany = $this->matcher->byName($askedCompany->getName(), $response->value('result'));
+        $results = array_slice($response->value('result', []), 0, 5);
 
-        $query = new InfoCriteria($matchedCompany['id']);
-        $response = $this->apiClient->info($query);
+        $matchedCompany = $this->matcher->byName($askedCompany->getName(), $results);
 
-        $company = $this->factory->fromApiResponse($response, $askedCompany->getJurisdiction());
-
-        $this->companies->add($company);
+        return $this->assembler->toMatchedCompanyDto($matchedCompany);
     }
 }

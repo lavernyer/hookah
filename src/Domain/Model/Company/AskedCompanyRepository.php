@@ -8,9 +8,9 @@ interface AskedCompanyRepository
 {
     public function byId(CompanyId $id): ?AskedCompany;
 
-    public function byExternalId(string $id): ?AskedCompany;
+    public function byExternalId(int $id): ?AskedCompany;
 
-    public function existsByExternalId(string $id): bool;
+    public function existsByExternalId(int $id): bool;
 
     public function add(AskedCompany $askedCompany): void;
 

@@ -16,9 +16,9 @@ final class CompanyFactory
         $this->extractor = $extractor;
     }
 
-    public function fromApiResponse(Response $response, Jurisdiction $jurisdiction): Company
+    public function fromApiResponse(Response $response, CompanyId $askedCompanyId, Jurisdiction $jurisdiction): Company
     {
-        $data = $response->getResponse();
+        $data = $response->getResponse()['results']['company'];
 
         $location = new Location(
             $jurisdiction,
@@ -34,8 +34,8 @@ final class CompanyFactory
             $this->extractor->agentAddress($data)
         );
 
-        return new Company(
-            $this->extractor->externalId($data),
+        $company = new Company(
+            $askedCompanyId,
             $location,
             $agent,
             $this->extractor->name($data),
@@ -43,5 +43,11 @@ final class CompanyFactory
             $this->extractor->status($data),
             $this->extractor->inactive($data),
         );
+
+        foreach ($this->extractor->officers($data) as $officer) {
+            $company->addOfficer($officer['name'], $officer['position']);
+        }
+
+        return $company;
     }
 }

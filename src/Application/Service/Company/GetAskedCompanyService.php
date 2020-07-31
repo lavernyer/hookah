@@ -4,27 +4,22 @@ declare(strict_types=1);
 
 namespace App\Application\Service\Company;
 
-use App\Application\Exception\AskedCompanyNotFound;
-use App\Domain\Model\Company\AskedCompany;
+use App\Application\Dto\Company\CompanyAssembler;
+use App\Application\Dto\Company\ViewAskedCompanyDto;
 use App\Domain\Model\Company\AskedCompanyRepository;
 
-final class GetAskedCompanyService
+final class GetAskedCompanyService extends AskedCompanyService
 {
-    private AskedCompanyRepository $askedCompanies;
+    private CompanyAssembler $assembler;
 
-    public function __construct(AskedCompanyRepository $askedCompanies)
+    public function __construct(CompanyAssembler $assembler, AskedCompanyRepository $askedCompanies)
     {
-        $this->askedCompanies = $askedCompanies;
+        parent::__construct($askedCompanies);
+        $this->assembler = $assembler;
     }
 
-    public function execute(GetAskedCompany $query): AskedCompany
+    public function execute(GetAskedCompany $query): ViewAskedCompanyDto
     {
-        $askedCompany = $this->askedCompanies->byId($query->getAskedCompanyId());
-
-        if (null === $askedCompany) {
-            throw AskedCompanyNotFound::byId($query->getAskedCompanyId());
-        }
-
-        return $askedCompany;
+        return $this->assembler->toViewAskedCompanyDto($this->getAskedCompany($query));
     }
 }

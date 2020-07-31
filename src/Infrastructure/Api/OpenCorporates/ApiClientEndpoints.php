@@ -37,7 +37,9 @@ final class ApiClientEndpoints implements ApiClient
             'query' => ['token' => 'a3mNHLv7Hi5VbSTisbpI'],
         ];
 
-        $url = "https://api.opencorporates.com/v0.4/companies/{$criteria->getId()}";
+        $slug = "{$criteria->getJurisdiction()->toString()}/{$criteria->getNumber()}";
+        $url = "https://api.opencorporates.com/v0.4/companies/{$slug}";
+
         return $this->send('GET', $url, $requestData);
     }
 }

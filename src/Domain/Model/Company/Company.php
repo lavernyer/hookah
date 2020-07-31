@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Model\Company;
 
+use App\Domain\Dto\Company\UpdateCompanyDto;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,9 +23,9 @@ class Company
     private CompanyId $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="company_id")
      */
-    private string $externalId;
+    private CompanyId $askedCompanyId;
 
     /**
      * @ORM\Embedded(class="Location", columnPrefix="address_")
@@ -56,7 +58,7 @@ class Company
     private bool $inactive;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      */
     private DateTimeImmutable $createdAt;
 
@@ -66,7 +68,7 @@ class Company
     private Collection $officers;
 
     public function __construct(
-        string $externalId,
+        CompanyId $askedCompanyId,
         Location $location,
         Agent $agent,
         string $name,
@@ -76,7 +78,7 @@ class Company
     )
     {
         $this->id = CompanyId::create();
-        $this->externalId = $externalId;
+        $this->askedCompanyId = $askedCompanyId;
         $this->location = $location;
         $this->agent = $agent;
         $this->name = $name;
@@ -84,6 +86,7 @@ class Company
         $this->status = $status;
         $this->inactive = $inactive;
         $this->createdAt = new DateTimeImmutable();
+        $this->officers = new ArrayCollection();
     }
 
     public function getId(): CompanyId
@@ -91,9 +94,9 @@ class Company
         return $this->id;
     }
 
-    public function getExternalId(): string
+    public function getAskedCompanyId(): CompanyId
     {
-        return $this->externalId;
+        return $this->askedCompanyId;
     }
 
     public function getLocation(): Location
@@ -134,5 +137,28 @@ class Company
     public function getOfficers(): Collection
     {
         return $this->officers;
+    }
+
+    public function addOfficer(string $name, string $position): void
+    {
+        $this->officers->add(new Officer($this, $name, $position));
+    }
+
+    public function update(UpdateCompanyDto $updateCompany): void
+    {
+        $this->location->update($updateCompany->location);
+        $this->agent->update($updateCompany->agent);
+
+        if (
+            $this->name !== $updateCompany->name
+            || $this->number !== $updateCompany->number
+            || $this->status !== $updateCompany->status
+            || $this->inactive !== $updateCompany->inactive
+        ) {
+            $this->name = $updateCompany->name;
+            $this->number = $updateCompany->number;
+            $this->status = $updateCompany->status;
+            $this->inactive = $updateCompany->inactive;
+        }
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Matcher;
 
 use App\Domain\Exception\MatchingFailed;
+use Symfony\Component\String\UnicodeString;
 
 final class MatchingProcessor
 {
@@ -15,7 +16,7 @@ final class MatchingProcessor
         $this->matcher = $matcher;
     }
 
-    public function byName(string $name, array $names): array
+    public function byName(string $name, array $names): MatchedCompany
     {
         $matchedNames = array_filter($names, fn($entry) => $this->matcher->match($name, $entry['name']));
         $result = array_shift($matchedNames);
@@ -24,6 +25,8 @@ final class MatchingProcessor
             throw MatchingFailed::byName($name);
         }
 
-        return $result;
+        $parts = explode('/', $result['id']);
+
+        return new MatchedCompany($parts[3], $parts[2]);
     }
 }

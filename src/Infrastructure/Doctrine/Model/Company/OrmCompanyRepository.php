@@ -28,12 +28,27 @@ final class OrmCompanyRepository implements CompanyRepository
         return $company;
     }
 
+    public function byAskedCompanyId(CompanyId $id): ?Company
+    {
+        /** @var Company $company */
+        $company = $this->getRepository()->findOneBy(['askedCompanyId' => $id->toString()]);
+
+        return $company;
+    }
+
     public function byExternalId(string $id): ?Company
     {
         /** @var Company $company */
         $company = $this->getRepository()->findOneBy(['externalId' => $id]);
 
         return $company;
+    }
+
+    public function existsByAskedCompanyId(CompanyId $id): bool
+    {
+        $criteria = ['askedCompanyId' => $id];
+
+        return 0 < $this->getRepository()->count($criteria);
     }
 
     public function add(Company $company): void

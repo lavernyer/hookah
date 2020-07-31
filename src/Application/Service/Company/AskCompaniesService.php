@@ -25,7 +25,7 @@ final class AskCompaniesService
         $companies = $this->client->companies($query->toArray());
         $newCompanies = [];
 
-        foreach ($companies as $company) {
+        foreach ($companies->getResponse() as $company) {
             if ($this->askedCompanies->existsByExternalId($company['id'])) {
                 continue;
             }
@@ -37,6 +37,6 @@ final class AskCompaniesService
             );
         }
 
-        $this->askedCompanies->addMultiple($newCompanies);
+        $this->askedCompanies->addMultiple(...$newCompanies);
     }
 }
