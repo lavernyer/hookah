@@ -46,10 +46,6 @@ services:
             $username: '%env(resolve:WG_API_USERNAME)%'
             $password: '%env(resolve:WG_API_PASSWORD)%'
 
-    #    App\Infrastructure\Api\OpenCorporates\ApiClientEndpoints:
-    #        arguments:
-    #            $client: '@op.client'
-
     App\Infrastructure\Api\WingleGroup\ApiClientEndpoints:
         arguments:
             $client: '@wg.client'
