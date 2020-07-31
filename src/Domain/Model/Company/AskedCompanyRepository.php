@@ -10,7 +10,11 @@ interface AskedCompanyRepository
 
     public function byExternalId(string $id): ?AskedCompany;
 
+    public function existsByExternalId(string $id): bool;
+
     public function add(AskedCompany $askedCompany): void;
+
+    public function addMultiple(AskedCompany ...$askedCompanies): void;
 
     public function update(AskedCompany $askedCompany): void;
 

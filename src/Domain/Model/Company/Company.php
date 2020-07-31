@@ -85,4 +85,54 @@ class Company
         $this->inactive = $inactive;
         $this->createdAt = new DateTimeImmutable();
     }
+
+    public function getId(): CompanyId
+    {
+        return $this->id;
+    }
+
+    public function getExternalId(): string
+    {
+        return $this->externalId;
+    }
+
+    public function getLocation(): Location
+    {
+        return $this->location;
+    }
+
+    public function getAgent(): Agent
+    {
+        return $this->agent;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getNumber(): string
+    {
+        return $this->number;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function isInactive(): bool
+    {
+        return $this->inactive;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getOfficers(): Collection
+    {
+        return $this->officers;
+    }
 }

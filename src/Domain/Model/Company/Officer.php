@@ -6,6 +6,9 @@ namespace App\Domain\Model\Company;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity()
+ */
 final class Officer
 {
     /**

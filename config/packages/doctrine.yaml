@@ -9,6 +9,7 @@ doctrine:
 
         url: '%env(resolve:DATABASE_URL)%'
         types:
+            user_id: 'App\Infrastructure\Doctrine\Type\UserIdType'
             company_id: 'App\Infrastructure\Doctrine\Type\CompanyIdType'
             officer_id: 'App\Infrastructure\Doctrine\Type\OfficerIdType'
             jurisdiction: 'App\Infrastructure\Doctrine\Type\JurisdictionType'

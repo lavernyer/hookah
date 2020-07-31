@@ -36,9 +36,25 @@ final class OrmAskedCompanyRepository implements AskedCompanyRepository
         return $askedCompany;
     }
 
+    public function existsByExternalId(string $id): bool
+    {
+        $criteria = ['externalId' => $id];
+
+        return 0 < $this->getRepository()->count($criteria);
+    }
+
     public function add(AskedCompany $askedCompany): void
     {
         $this->em->persist($askedCompany);
+        $this->em->flush();
+    }
+
+    public function addMultiple(AskedCompany ...$askedCompanies): void
+    {
+        array_walk($askedCompanies, function (AskedCompany $askedCompany): void {
+            $this->em->persist($askedCompany);
+        });
+
         $this->em->flush();
     }
 
